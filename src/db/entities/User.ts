@@ -28,7 +28,7 @@ export class User extends BaseEntity {
     roles: Role[];
 
     @OneToOne(() => Profile, profile => profile.user)
-    profile: Profile;
+    profile: Partial<Profile>;
 
     @CreateDateColumn({
         type: 'timestamp',

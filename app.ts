@@ -3,7 +3,7 @@ import express from 'express'
 import logger from 'morgan'
 
 import indexRouter from './src/routes/index.js'
-import usersRouter from './src/routes/users.js'
+import usersRouter from './src/routes/user.js'
 
 import dotenv from "dotenv"
 import dataSource from './src/db/dataSource.js'
@@ -20,7 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/user', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
