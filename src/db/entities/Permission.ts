@@ -3,14 +3,13 @@ import { Role } from "./Role.js";
 
 @Entity('permissions')
 export class Permission extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('increment')
     id: string;
 
     @Column({
-        type: 'enum',
-        enum: ['create_post', 'edit_user', 'delete_comment'],
+        unique: true
     })
-    name: 'create_post' | 'edit_user' | 'delete_comment';
+    name: string;
 
     @ManyToMany(() => Role, role => role.permissions)
     roles: Role[];

@@ -23,11 +23,11 @@ export class User extends BaseEntity {
     @Column({ nullable: false })
     password: string;
 
-    @ManyToMany(() => Role, role => role.users)
+    @ManyToMany(() => Role, role => role.users, { eager: true })
     @JoinTable()
     roles: Role[];
 
-    @OneToOne(() => Profile, profile => profile.user)
+    @OneToOne(() => Profile, profile => profile.user, { eager: true })
     profile: Partial<Profile>;
 
     @CreateDateColumn({

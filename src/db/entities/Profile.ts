@@ -4,7 +4,7 @@ import { User } from './User.js';
 
 @Entity('profiles')
 export class Profile extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('increment')
     id: string;
 
     @Column({ length: 255, nullable: false })

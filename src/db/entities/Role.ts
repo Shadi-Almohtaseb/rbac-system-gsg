@@ -4,20 +4,21 @@ import { Permission } from "./Permission.js";
 
 @Entity('roles')
 export class Role extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('increment')
     id: string;
 
     @Column({
         type: 'enum',
         enum: ['user', 'admin', 'editor'],
-        default: "user"
+        default: "user",
+        unique: true
     })
     name: 'user' | 'admin' | 'editor';
 
-    @ManyToMany(() => User, user => user.roles)
+    @ManyToMany(() => User, user => user.roles, { cascade: true })
     users: User[];
 
-    @ManyToMany(() => Permission, permission => permission.roles)
+    @ManyToMany(() => Permission, { cascade: true, eager: true })
     @JoinTable()
     permissions: Permission[];
 }
