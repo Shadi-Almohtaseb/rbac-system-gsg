@@ -5,21 +5,32 @@ const router = express.Router();
 
 
 /* POST user. */
-router.post("/", (req, res) => {
-  createUser(req.body).then(() => {
-    res.status(201).send("User created successfully")
-  }).catch((error) => {
-    res.status(500).send(error)
-  })
-})
+router.post("/", async (req, res) => {
+  try {
+    const { email, password, userName, displayName, role } = req.body;
+    if (!email || !password || !userName || !displayName || !role) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+    await createUser(req.body);
+    res.status(201).json({ message: "User created successfully" });
+  } catch (error) {
+    console.error("Error creating user:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 /* Login User. */
 router.post("/login", (req, res) => {
-  login(req.body.email, req.body.password).then((data) => {
-    res.status(200).send(data)
-  }).catch((error) => {
-    res.status(400).send(error)
-  })
+  if (req.body.email && req.body.password) {
+    login(req.body.email, req.body.password).then((data) => {
+      res.status(200).send(data)
+    }).catch((error) => {
+      res.status(400).send(error)
+    })
+  } else {
+    res.status(404).send("email and password are required")
+  }
 })
 
 /* GET users. */

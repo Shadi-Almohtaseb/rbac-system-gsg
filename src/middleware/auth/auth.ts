@@ -11,9 +11,6 @@ const authenticate = async (req: Express.Request, res: Express.Response, next: E
 
     }
 
-    console.log(token);
-
-
     if (validToken) {
         let decoded = jwt.decode(token, { json: true })
         const user = await User.findOneBy({ email: decoded?.email })

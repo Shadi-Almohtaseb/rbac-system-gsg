@@ -3,6 +3,7 @@ export namespace UserNS {
     export interface User {
         id: string,
         userName: string,
+        displayName: string,
         email: string
         password: string,
         createdAt: Date,
@@ -16,7 +17,7 @@ export namespace UserNS {
     }
     export interface Permission {
         id: number,
-        name: 'create_post' | 'edit_user' | 'delete_comment',
+        name: string,
     }
 
 }

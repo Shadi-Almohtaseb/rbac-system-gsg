@@ -50,14 +50,19 @@ const login = async (email: string, password: string) => {
             email
         });
 
+        if (!user) {
+            return undefined
+        }
+
         const passwordMatching = await bcrypt.compare(password, user?.password || '')
 
         if (user && passwordMatching) {
             const token = jwt.sign({
                 email: user.email,
-                userName: user.userName
+                userName: user.userName,
+                displayName: user.displayName
             }, process.env.SECRET_KEY || "", {
-                expiresIn: "30m"
+                expiresIn: "14d"
             })
 
             return {
