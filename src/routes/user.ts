@@ -11,8 +11,12 @@ router.post("/", async (req, res) => {
     if (!email || !password || !userName || !displayName || !role) {
       return res.status(400).json({ error: "All fields are required." });
     }
-    await createUser(req.body);
-    res.status(201).json({ message: "User created successfully" });
+    if (role === "admin" || role === "editor" || role === "user") {
+      await createUser(req.body);
+      res.status(201).json({ message: "User created successfully" });
+    } else {
+      return res.status(400).json({ error: "Invalid role" });
+    }
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -43,7 +47,7 @@ router.get('/', authenticate, (req, res, next) => {
 });
 
 /* POST permission. */
-router.post('/permission', (req, res, next) => {
+router.post('/permission', authenticate, (req, res, next) => {
   try {
     createPermission(req.body)
     res.status(201).send("permission created successfully")
@@ -63,7 +67,7 @@ router.get('/permission', authenticate, function (req, res, next) {
 });
 
 /* POST Role. */
-router.post('/role', (req, res, next) => {
+router.post('/role', authenticate, (req, res, next) => {
   createRole(req.body).then(data => {
     res.status(201).send(data)
   }).catch(error => {

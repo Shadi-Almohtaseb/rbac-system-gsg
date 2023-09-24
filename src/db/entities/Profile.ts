@@ -16,11 +16,8 @@ export class Profile extends BaseEntity {
     @Column({ type: "date", nullable: false })
     dateOfBirth: Date;
 
-    @Column({
-        type: 'enum',
-        enum: ['create_post', 'edit_user', 'delete_comment'],
-    })
-    name: 'create_post' | 'edit_user' | 'delete_comment';
+    @Column()
+    name: string;
 
     @OneToOne(() => User, user => user.profile)
     @JoinColumn()
