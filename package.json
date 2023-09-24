@@ -13,6 +13,8 @@
   },
   "license": "ISC",
   "dependencies": {
+    "@babel/preset-env": "^7.22.20",
+    "babel-jest": "^29.7.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -23,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "mysql": "^2.18.1",
+    "ts-jest": "^29.1.1",
     "typeorm": "^0.3.17",
     "typescript": "^5.2.2"
   },

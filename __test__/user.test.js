@@ -1,8 +1,15 @@
-import dataSource, { initDB } from "../dist/db/dataSource.js";
+import dataSource from "../src/db/dataSource.js";
 import { User } from "../src/db/entities/User.js";
 
 beforeAll(async () => {
-  await initDB();
+  dataSource
+    .initialize()
+    .then(() => {
+      console.log("Connected to DB!");
+    })
+    .catch((err) => {
+      console.error("Failed to connect to DB: " + err);
+    });
 });
 
 afterAll(async () => {
