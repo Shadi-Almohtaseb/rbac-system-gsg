@@ -1,6 +1,8 @@
+import "./config.js"
 import createError from 'http-errors'
 import express from 'express'
 import logger from 'morgan'
+import cookieParser from 'cookie-parser';
 
 import indexRouter from './src/routes/index.js'
 import usersRouter from './src/routes/user.js'
@@ -10,6 +12,7 @@ import dataSource from './src/db/dataSource.js'
 
 const app = express();
 dotenv.config()
+app.use(cookieParser());
 const PORT = 5000
 
 // view engine setup

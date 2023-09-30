@@ -1,50 +1,68 @@
-import dataSource from "../src/db/dataSource.js";
-import { User } from "../src/db/entities/User.js";
+import "../dist/config";
+import dataSource from "../dist/src/db/dataSource.js";
+import express from "express";
+import request from "supertest";
+import usersRouter from "../dist/src/routes/user.js";
+
+const app = express();
+app.use(express.json());
+app.use("/user", usersRouter);
 
 beforeAll(async () => {
-  dataSource
-    .initialize()
-    .then(() => {
-      console.log("Connected to DB!");
-    })
-    .catch((err) => {
-      console.error("Failed to connect to DB: " + err);
-    });
-});
+  try {
+    await dataSource.initialize();
+    console.log("Connected to DB!");
+  } catch (err) {
+    console.log("Failed to connect to DB:", err);
+  }
+}, 10000);
 
 afterAll(async () => {
   await dataSource.destroy();
 });
 
-const TemPUser = {
-  email: "test@example.com",
-  password: "password123",
-  userName: "testuser",
-  displayName: "Test User",
-  role: "someRole",
-};
+describe("POST /user", () => {
+  it("should create a user with valid input", async () => {
+    const user = {
+      email: "test@example.com",
+      password: "password123",
+      userName: "testuser",
+      displayName: "Test User",
+      role: "user",
+    };
 
-describe("Create User", () => {
-  it("should require all fields", async () => {
-    await expect(createUser(TemPUser)).rejects.toThrow();
+    const response = await request(app).post("/user").send(user);
+
+    expect(response.status).toBe(201);
+    expect(response.body.message).toBe("User created successfully");
   });
 
-  it("should create a user", async () => {
-    const mockRole = {
-      name: "someRole",
-      permissions: ["p1", "p2"],
+  it("should return 400 if any field is missing", async () => {
+    const user = {
+      email: "test@example.com",
+      password: "password123",
+      displayName: "Test User",
+      role: "user",
     };
-    Role.findOneBy.mockResolvedValue(mockRole);
 
-    const mockPermission = { name: "p1" };
-    Permission.findBy.mockResolvedValue([mockPermission]);
+    const response = await request(app).post("/user").send(user);
 
-    await createUser(TemPUser);
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe("All fields are required.");
+  });
 
-    expect(User.create).toHaveBeenCalledWith({
-      ...TemPUser,
-      roles: [mockRole],
-    });
-    expect(dataSource.manager.transaction).toHaveBeenCalled();
+  it("should return 400 for an invalid role", async () => {
+    const user = {
+      email: "test@example.com",
+      password: "password123",
+      userName: "testuser",
+      displayName: "Test User",
+      role: "invalidRole",
+    };
+
+    const response = await request(app).post("/user").send(user);
+
+    expect(response.status).toBe(400);
+    expect(response.body.error).toBe("Invalid role");
   });
 });

@@ -28,6 +28,7 @@ router.post("/", async (req, res) => {
 router.post("/login", (req, res) => {
   if (req.body.email && req.body.password) {
     login(req.body.email, req.body.password).then((data) => {
+      res.cookie("myToken", data?.token, { httpOnly: true, maxAge: 3600000 })
       res.status(200).send(data)
     }).catch((error) => {
       res.status(400).send(error)
